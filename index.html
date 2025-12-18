@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>TodoLIFF</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="style.css" />
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 </head>
 <body>
@@ -14,24 +13,23 @@
   <h1>TodoLIFF</h1>
 </header>
 
-<div class="container">
-
-  <input id="title" placeholder="タスク名">
-  <label>開始時間</label>
-  <input type="time" id="startTime">
-
+<section class="add">
+  <input id="title" placeholder="タスク名" />
+  <input type="time" id="startTime" />
+  <input type="month" id="month" />
   <button onclick="addTodo()">追加</button>
+</section>
 
-  <div class="filters">
-    <button onclick="setFilter('all')">すべて</button>
-    <button onclick="setFilter('todo')">未開始</button>
-    <button onclick="setFilter('doing')">実行中</button>
-    <button onclick="setFilter('done')">終了</button>
-  </div>
+<section class="filters">
+  <button onclick="setFilter('all')">すべて</button>
+  <button onclick="setFilter('todo')">未開始</button>
+  <button onclick="setFilter('doing')">実行中</button>
+  <button onclick="setFilter('done')">完了</button>
+</section>
 
-  <div id="list"></div>
-</div>
+<section id="list"></section>
 
 <script src="script.js"></script>
 </body>
 </html>
+
