@@ -1,0 +1,60 @@
+body {
+  font-family: system-ui, sans-serif;
+  background: #f0f2f5;
+  margin: 0;
+}
+
+header {
+  background: #06c755;
+  color: white;
+  padding: 12px;
+  text-align: center;
+}
+
+.container {
+  padding: 12px;
+}
+
+input, select, button {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+button {
+  background: #06c755;
+  color: white;
+  border: none;
+  font-weight: bold;
+}
+
+.filters {
+  display: flex;
+  gap: 6px;
+  margin: 10px 0;
+}
+
+.filters button {
+  flex: 1;
+  background: #ddd;
+  color: #333;
+}
+
+.todo {
+  background: white;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+.todo.doing {
+  border-left: 6px solid #ff9800;
+  background: #fff7e6;
+}
+
+.todo.done {
+  opacity: 0.6;
+  text-decoration: line-through;
+}
