@@ -1,35 +1,40 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <title>TodoLIFF</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <title>NEO LINE TODO</title>
+
+  <!-- LIFF SDK -->
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <header>
-  <h1>TodoLIFF</h1>
+  <h1>NEO LINE TODO</h1>
 </header>
 
-<section class="add">
-  <input id="title" placeholder="タスク名" />
-  <input type="date" id="date" />
-  <input type="time" id="startTime" />
-  <button onclick="addTodo()">追加</button>
-</section>
+<div class="container">
+  <div class="today" id="today"></div>
 
-<section class="filters">
-  <button onclick="setFilter('all')">すべて</button>
-  <button onclick="setFilter('todo')">未開始</button>
-  <button onclick="setFilter('doing')">実行中</button>
-  <button onclick="setFilter('done')">完了</button>
-</section>
+  <div class="add">
+    <input id="title" placeholder="タスク内容">
+    <input id="date" type="date">
+    <input id="startTime" type="time">
+    <button id="addBtn">ADD</button>
+  </div>
 
-<section id="list"></section>
+  <div class="filters">
+    <button data-filter="all" class="active">ALL</button>
+    <button data-filter="todo">TODO</button>
+    <button data-filter="doing">DOING</button>
+    <button data-filter="done">DONE</button>
+  </div>
+
+  <div id="list"></div>
+</div>
 
 <script src="script.js"></script>
 </body>
 </html>
-
