@@ -103,7 +103,7 @@ function render() {
 
   const now = nowHHMM();
 
-  todos.forEach((todo,i)=>{
+todos.forEach((todo,i)=>{
     const div = document.createElement("div");
     div.className = `todo ${todo.status}`;
 
@@ -123,10 +123,18 @@ function render() {
       duration = ` ⏱${min}分`;
     }
 
+    // 日付を「YYYY/MM/DD (曜日)」形式に整形
+    let dateStr = "";
+    if (todo.date) {
+      const d = new Date(todo.date);
+      const weekdays = ["日","月","火","水","木","金","土"];
+      dateStr = `${d.getFullYear()}/${d.getMonth()+1}/${d.getDate()} (${weekdays[d.getDay()]})`;
+    }
+
     div.innerHTML = `
       <div>
         <div class="todo-text">${todo.title}</div>
-        <div class="todo-time">${todo.date} ${todo.startTime || ""}${duration}</div>
+        <div class="todo-time">${dateStr} ${todo.startTime || ""}${duration}</div>
       </div>
       <button onclick="changeStatus(${i})">
         ${todo.status === "todo" ? "▶" :
@@ -135,7 +143,8 @@ function render() {
     `;
 
     list.appendChild(div);
-  });
+});
+
 }
 
 /* ===== 開始時間通知 ===== */
@@ -182,4 +191,5 @@ function morningSummary() {
 setInterval(checkStartTime, 60000);
 morningSummary();
 render();
+
 
