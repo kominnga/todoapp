@@ -1,58 +1,91 @@
+/* ==========================
+   設定
+========================== */
 const STORAGE_KEY = "todos";
 let currentFilter = "all";
 
 /* ===== LIFF ===== */
 liff.init({ liffId: "2008726714-eZTej71E" });
 
-/* ===== Storage ===== */
-const getTodos = () => JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-const saveTodos = (todos) => localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
-
 /* ===== util ===== */
-function nowHHMM() { return new Date().toTimeString().slice(0,5); }
-function dayOfWeek(dateStr) {
-  const days = ["日","月","火","水","木","金","土"];
-  return days[new Date(dateStr).getDay()];
-}
+const getTodos = () => JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+const saveTodos = (t) => localStorage.setItem(STORAGE_KEY, JSON.stringify(t));
+const nowHHMM = () => new Date().toTimeString().slice(0, 5);
+const dayOfWeek = (d) => ["日","月","火","水","木","金","土"][new Date(d).getDay()];
+
+/* ===== 初期表示 ===== */
+const todayEl = document.getElementById("today");
+const dateEl = document.getElementById("date");
+const titleEl = document.getElementById("title");
+const timeEl = document.getElementById("startTime");
+const listEl = document.getElementById("list");
+
+const now = new Date();
+todayEl.textContent =
+  `${now.getFullYear()}/${now.getMonth()+1}/${now.getDate()}（${dayOfWeek(now)}）`;
+dateEl.value = now.toISOString().slice(0,10);
 
 /* ===== 追加 ===== */
-async function addTodo() {
-  const title = document.getElementById("title").value;
-  const date = document.getElementById("date").value;
-  const startTime = document.getElementById("startTime").value;
-  if (!title || !date) return;
+document.getElementById("addBtn").onclick = addTodo;
+
+function addTodo(){
+  if(!titleEl.value || !dateEl.value) return;
+
+  const todo = {
+    title: titleEl.value,
+    date: dateEl.value,
+    startTime: timeEl.value,
+    status: "todo",
+    notifiedBefore: false,
+    notifiedAfter: false,
+    created: Date.now(),
+    startedAt: null,
+    endedAt: null
+  };
 
   const todos = getTodos();
-  const todo = {
-    title, date, startTime,
-    status:"todo", notified:false, created:Date.now(),
-    startedAt:null, endedAt:null
-  };
   todos.push(todo);
   saveTodos(todos);
-  document.getElementById("title").value="";
+  titleEl.value = "";
   render();
 
-  // Workerに送信（LINE & メール通知用）
+  // Worker送信（将来 Push / Mail）
   fetch("https://YOUR_WORKER_DOMAIN/tasks", {
-    method:"POST",
-    headers:{ "Content-Type":"application/json" },
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(todo)
   });
 }
 
 /* ===== フィルタ ===== */
-function setFilter(filter) { currentFilter = filter; render(); }
+document.querySelectorAll(".filters button").forEach(btn=>{
+  btn.onclick = () => {
+    document.querySelectorAll(".filters button").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    currentFilter = btn.dataset.filter;
+    render();
+  };
+});
 
 /* ===== 状態変更 ===== */
-function changeStatus(index){
+function changeStatus(i){
   const todos = getTodos();
-  const todo = todos[index];
+  const t = todos[i];
 
-  if(todo.status==="todo"){ todo.status="doing"; todo.startedAt=Date.now();
-    if(liff.isInClient()){ liff.sendMessages([{ type:"text", text:`▶ 実行開始\n${todo.title}` }]); }
-  } else if(todo.status==="doing"){ todo.status="done"; todo.endedAt=Date.now(); }
-  else { todo.status="todo"; todo.notified=false; }
+  if(t.status === "todo"){
+    t.status = "doing";
+    t.startedAt = Date.now();
+    if(liff.isInClient()){
+      liff.sendMessages([{ type:"text", text:`▶ 開始\n${t.title}` }]);
+    }
+  } else if(t.status === "doing"){
+    t.status = "done";
+    t.endedAt = Date.now();
+  } else {
+    t.status = "todo";
+    t.notifiedBefore = false;
+    t.notifiedAfter = false;
+  }
 
   saveTodos(todos);
   render();
@@ -60,77 +93,75 @@ function changeStatus(index){
 
 /* ===== 描画 ===== */
 function render(){
-  const list = document.getElementById("list");
-  list.innerHTML="";
+  listEl.innerHTML = "";
   let todos = getTodos();
 
-  const todayMonth = new Date().toISOString().slice(0,7);
-  todos = todos.filter(t=>!t.date || t.date.startsWith(todayMonth));
+  if(currentFilter !== "all"){
+    todos = todos.filter(t => t.status === currentFilter);
+  }
 
-  todos.sort((a,b)=>{
-    if(a.status==="doing"&&b.status!=="doing") return -1;
-    if(a.status!=="doing"&&b.status==="doing") return 1;
-    return a.created - b.created;
-  });
+  if(!todos.length){
+    listEl.innerHTML = "<p style='text-align:center;color:#64748b;'>ToDoなし</p>";
+    return;
+  }
 
-  if(currentFilter!=="all") todos = todos.filter(t=>t.status===currentFilter);
+  const nowTime = nowHHMM();
 
-  if(!todos.length){ list.innerHTML="<p style='text-align:center;'>ToDoなし</p>"; return; }
-
-  const now = nowHHMM();
-  todos.forEach((todo,i)=>{
+  todos.forEach((t,i)=>{
     const div = document.createElement("div");
-    div.className=`todo ${todo.status}`;
+    div.className = `todo ${t.status}`;
 
-    // 遅延・オーバー
-    if(todo.status==="todo" && todo.startTime && todo.startTime<now) div.classList.add("late");
-    if(todo.status==="doing" && todo.startedAt && Date.now()-todo.startedAt>60*60*1000) div.classList.add("over");
+    if(t.status==="todo" && t.startTime && t.startTime < nowTime) div.classList.add("late");
+    if(t.status==="doing" && Date.now()-t.startedAt > 3600000) div.classList.add("over");
 
     let duration="";
-    if(todo.startedAt && todo.endedAt){
-      const min = Math.floor((todo.endedAt - todo.startedAt)/60000);
-      duration = ` ⏱${min}分`;
+    if(t.startedAt && t.endedAt){
+      duration = ` ⏱${Math.floor((t.endedAt - t.startedAt)/60000)}分`;
     }
 
-    div.innerHTML=`
+    div.innerHTML = `
       <div>
-        <div class="todo-text">${todo.title}</div>
-        <div class="todo-time">${todo.date}(${dayOfWeek(todo.date)}) ${todo.startTime || ""}${duration}</div>
+        <div class="todo-text">${t.title}</div>
+        <div class="todo-time">${t.date}(${dayOfWeek(t.date)}) ${t.startTime || ""}${duration}</div>
       </div>
-      <button onclick="changeStatus(${i})">${todo.status==="todo"?"▶":todo.status==="doing"?"✓":"↩"}</button>
+      <button onclick="changeStatus(${i})">
+        ${t.status==="todo"?"▶":t.status==="doing"?"✓":"↩"}
+      </button>
     `;
-    list.appendChild(div);
+    listEl.appendChild(div);
   });
 }
 
-/* ===== 開始時間通知（LIFF内） ===== */
-function checkStartTime(){
+/* ===== 5分前 / 5分遅れ ===== */
+setInterval(()=>{
   const todos = getTodos();
-  const hhmm = nowHHMM();
-  let changed=false;
+  const now = new Date();
 
-  todos.forEach(todo=>{
-    if(todo.startTime===hhmm && todo.status==="todo" && !todo.notified){
-      if(liff.isInClient()){ liff.sendMessages([{ type:"text", text:`⏰ ${todo.startTime}\n${todo.title}` }]); }
-      todo.notified=true; changed=true;
+  todos.forEach(t=>{
+    if(!t.startTime || t.status==="done") return;
+    const due = new Date(`${t.date}T${t.startTime}`);
+    const diff = (due - now) / 60000;
+
+    if(diff<=5 && diff>4 && !t.notifiedBefore){
+      if(liff.isInClient()){
+        liff.sendMessages([{ type:"text", text:`⏰ 5分前\n${t.title}` }]);
+      }
+      t.notifiedBefore = true;
+    }
+
+    if(diff<=-5 && diff>-6 && !t.notifiedAfter){
+      if(liff.isInClient()){
+        liff.sendMessages([{ type:"text", text:`⚠ 遅れています\n${t.title}` }]);
+      }
+      t.notifiedAfter = true;
     }
   });
-  if(changed) saveTodos(todos);
-}
 
-/* ===== 朝9時まとめ ===== */
-function morningSummary(){
-  const h=new Date().getHours();
-  const key=new Date().toDateString();
-  if(h<9 || localStorage.getItem("morning")===key) return;
-  const todos=getTodos().filter(t=>t.status==="todo");
-  if(todos.length) alert("📋 今日のToDo\n\n"+todos.map(t=>"・"+t.title).join("\n"));
-  localStorage.setItem("morning",key);
-}
+  saveTodos(todos);
+}, 60000);
 
-setInterval(checkStartTime,60000);
-morningSummary();
 render();
+
 
 
 
