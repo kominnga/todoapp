@@ -1,40 +1,56 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <title>NEO LINE TODO</title>
+  <meta charset="UTF-8" />
+  <title>LINE TODO Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- LIFF SDK -->
+  <!-- LIFF -->
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
 <header>
-  <h1>NEO LINE TODO</h1>
+  <h1>TODO MANAGEMENT</h1>
+  <p class="sub">LINE × Cloudflare Workers</p>
 </header>
 
-<div class="container">
-  <div class="today" id="today"></div>
-
-  <div class="add">
-    <input id="title" placeholder="タスク内容">
+<main>
+  <!-- ===== 追加フォーム ===== -->
+  <section class="add">
+    <input id="title" type="text" placeholder="タスク名">
     <input id="date" type="date">
     <input id="startTime" type="time">
-    <button id="addBtn">ADD</button>
-  </div>
+    <button onclick="addTodo()">＋ 追加</button>
+  </section>
 
-  <div class="filters">
-    <button data-filter="all" class="active">ALL</button>
-    <button data-filter="todo">TODO</button>
-    <button data-filter="doing">DOING</button>
-    <button data-filter="done">DONE</button>
-  </div>
+  <!-- ===== 管理ボード ===== -->
+  <section class="board">
+    <div class="column">
+      <h2>今やってる</h2>
+      <div id="doing" class="list"></div>
+    </div>
 
-  <div id="list"></div>
-</div>
+    <div class="column">
+      <h2>未着手</h2>
+      <div id="todo" class="list"></div>
+    </div>
 
-<script src="script.js"></script>
+    <div class="column">
+      <h2>完了</h2>
+      <div id="done" class="list"></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <small>© Future Task System</small>
+</footer>
+
+<script src="main.js"></script>
 </body>
 </html>
+
+
