@@ -2,55 +2,41 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <title>LINE TODO Dashboard</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- LIFF -->
-  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-
+  <title>Corporate ToDo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="style.css" />
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 </head>
 <body>
+  <header>
+    <h1>Corporate Task Manager</h1>
+    <p id="userLabel">Loading...</p>
+  </header>
 
-<header>
-  <h1>TODO MANAGEMENT</h1>
-  <p class="sub">LINE × Cloudflare Workers</p>
-</header>
+  <main>
+    <!-- 追加 -->
+    <section class="add">
+      <input id="title" placeholder="タスク名" />
+      <input id="date" type="date" />
+      <input id="time" type="time" />
+      <button onclick="addTask()">＋ 追加</button>
+    </section>
 
-<main>
-  <!-- ===== 追加フォーム ===== -->
-  <section class="add">
-    <input id="title" type="text" placeholder="タスク名">
-    <input id="date" type="date">
-    <input id="startTime" type="time">
-    <button onclick="addTodo()">＋ 追加</button>
-  </section>
+    <!-- フィルタ -->
+    <section class="tabs">
+      <button onclick="setFilter('doing')">今やってる</button>
+      <button onclick="setFilter('todo')">未着手</button>
+      <button onclick="setFilter('done')">完了</button>
+    </section>
 
-  <!-- ===== 管理ボード ===== -->
-  <section class="board">
-    <div class="column">
-      <h2>今やってる</h2>
-      <div id="doing" class="list"></div>
-    </div>
+    <!-- 一覧 -->
+    <section id="list"></section>
+  </main>
 
-    <div class="column">
-      <h2>未着手</h2>
-      <div id="todo" class="list"></div>
-    </div>
+  <footer>
+    LINE × Cloudflare Workers
+  </footer>
 
-    <div class="column">
-      <h2>完了</h2>
-      <div id="done" class="list"></div>
-    </div>
-  </section>
-</main>
-
-<footer>
-  <small>© Future Task System</small>
-</footer>
-
-<script src="main.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
-
-
