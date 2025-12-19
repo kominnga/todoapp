@@ -1,135 +1,54 @@
-/* ===== Reset ===== */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-/* ===== Base ===== */
 body {
-  font-family: "Segoe UI", "Noto Sans JP", sans-serif;
-  background: linear-gradient(135deg, #0a0f1e, #121a2f);
-  color: #e8f0ff;
-  min-height: 100vh;
+  background: #0b0f1a;
+  color: #e6e8ef;
+  font-family: "Segoe UI", sans-serif;
+  margin: 0;
 }
 
-/* ===== Header ===== */
 header {
-  padding: 24px;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding: 16px;
+  font-size: 20px;
+  background: linear-gradient(90deg, #1f2a48, #0b0f1a);
+  border-bottom: 1px solid #2a3558;
 }
 
-header h1 {
-  font-size: 24px;
-  letter-spacing: 2px;
-}
+main { padding: 16px; }
 
-header .sub {
-  font-size: 12px;
-  opacity: 0.7;
-}
-
-/* ===== Main ===== */
-main {
-  padding: 20px;
-}
-
-/* ===== Add Form ===== */
-.add {
-  display: grid;
-  grid-template-columns: 1fr 160px 120px 100px;
-  gap: 12px;
-  margin-bottom: 24px;
-}
-
-.add input,
-.add button {
-  padding: 10px 12px;
-  border-radius: 8px;
-  border: none;
-  outline: none;
-}
-
-.add input {
-  background: rgba(255,255,255,0.1);
+.add input, .add button {
+  padding: 10px;
+  margin-right: 6px;
+  background: #121a2f;
+  border: 1px solid #2a3558;
   color: #fff;
 }
 
 .add button {
-  background: linear-gradient(135deg, #00e5ff, #0066ff);
-  color: #000;
-  font-weight: bold;
   cursor: pointer;
+  background: #2a5cff;
 }
 
-.add button:hover {
-  opacity: 0.85;
+.tabs button {
+  margin: 8px 6px 8px 0;
+  padding: 8px 14px;
+  background: #1a223d;
+  border: none;
+  color: #ccc;
 }
 
-/* ===== Board ===== */
-.board {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-}
-
-/* ===== Column ===== */
-.column {
-  background: rgba(255,255,255,0.05);
-  border-radius: 16px;
-  padding: 16px;
-  backdrop-filter: blur(10px);
-}
-
-.column h2 {
-  font-size: 14px;
-  margin-bottom: 12px;
-  opacity: 0.8;
-}
-
-/* ===== Task Card ===== */
-.list {
+.todo {
+  background: #121a2f;
+  border-left: 4px solid #2a5cff;
+  padding: 10px;
+  margin-bottom: 10px;
   display: flex;
-  flex-direction: column;
-  gap: 10px;
+  justify-content: space-between;
 }
 
-.card {
-  background: rgba(0,0,0,0.4);
-  padding: 12px;
-  border-radius: 10px;
-  border-left: 4px solid #00e5ff;
-  transition: 0.2s;
-}
+.todo.doing { border-color: #00ffcc; }
+.todo.done { border-color: #999; opacity: 0.6; }
 
-.card.doing {
-  border-color: #00ff9c;
-}
-
-.card.done {
-  border-color: #888;
-  opacity: 0.6;
-}
-
-.card:hover {
-  transform: translateY(-2px);
-}
-
-/* ===== Footer ===== */
-footer {
-  text-align: center;
-  padding: 12px;
-  font-size: 11px;
-  opacity: 0.4;
-}
-
-/* ===== Mobile ===== */
-@media (max-width: 900px) {
-  .add {
-    grid-template-columns: 1fr;
-  }
-
-  .board {
-    grid-template-columns: 1fr;
-  }
+.todo button {
+  background: none;
+  border: 1px solid #2a3558;
+  color: #fff;
 }
