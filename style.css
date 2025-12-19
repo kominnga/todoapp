@@ -1,54 +1,112 @@
+* {
+  box-sizing: border-box;
+}
+
 body {
-  background: #0b0f1a;
-  color: #e6e8ef;
-  font-family: "Segoe UI", sans-serif;
   margin: 0;
+  background: #0a0f1e;
+  color: #e6e9f2;
+  font-family: "Segoe UI", system-ui, sans-serif;
 }
 
 header {
   padding: 16px;
-  font-size: 20px;
-  background: linear-gradient(90deg, #1f2a48, #0b0f1a);
-  border-bottom: 1px solid #2a3558;
+  background: linear-gradient(90deg, #18224a, #0a0f1e);
+  border-bottom: 1px solid #2a3566;
 }
 
-main { padding: 16px; }
+header h1 {
+  margin: 0;
+  font-size: 20px;
+}
 
-.add input, .add button {
+header p {
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: #9aa4d6;
+}
+
+main {
+  padding: 16px;
+}
+
+.add {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.add input {
+  flex: 1;
   padding: 10px;
-  margin-right: 6px;
-  background: #121a2f;
-  border: 1px solid #2a3558;
+  background: #121a35;
+  border: 1px solid #2a3566;
   color: #fff;
 }
 
 .add button {
-  cursor: pointer;
+  padding: 10px 14px;
   background: #2a5cff;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+}
+
+.tabs {
+  margin-bottom: 12px;
 }
 
 .tabs button {
-  margin: 8px 6px 8px 0;
-  padding: 8px 14px;
-  background: #1a223d;
-  border: none;
-  color: #ccc;
+  margin-right: 6px;
+  padding: 8px 12px;
+  background: #1a2245;
+  border: 1px solid #2a3566;
+  color: #cfd6ff;
 }
 
-.todo {
-  background: #121a2f;
+#list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.task {
+  background: #121a35;
   border-left: 4px solid #2a5cff;
   padding: 10px;
-  margin-bottom: 10px;
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 
-.todo.doing { border-color: #00ffcc; }
-.todo.done { border-color: #999; opacity: 0.6; }
+.task.doing {
+  border-color: #00ffd5;
+}
 
-.todo button {
+.task.done {
+  border-color: #888;
+  opacity: 0.6;
+}
+
+.task .info {
+  font-size: 14px;
+}
+
+.task .time {
+  font-size: 11px;
+  color: #9aa4d6;
+}
+
+.task button {
   background: none;
-  border: 1px solid #2a3558;
+  border: 1px solid #2a3566;
   color: #fff;
+  padding: 6px 10px;
+}
+
+footer {
+  text-align: center;
+  padding: 10px;
+  font-size: 11px;
+  color: #6670a3;
 }
