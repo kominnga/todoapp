@@ -6,7 +6,7 @@ let userId = null;
 // LIFF 初期化
 // =========================
 async function main() {
-  await liff.init({ liffId: "YOUR_LIFF_ID" });
+  await liff.init({ liffId: "2008726714-eZTej71E" });
   if (!liff.isInClient()) {
     alert("LINEアプリ内で開いてください");
     return;
@@ -135,3 +135,4 @@ function render(){
     list.appendChild(div);
   });
 }
+
