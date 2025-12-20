@@ -1,7 +1,7 @@
 const API_BASE = "https://empty-haze-29be.kanikani34423.workers.dev";
 
 async function initLiff() {
-  await liff.init({ liffId: "2008726714-eZTej71E" });
+  await liff.init({ liffId: "YOUR_LIFF_ID" });
   if (!liff.isLoggedIn()) await liff.login();
 
   document.getElementById("addBtn").addEventListener("click", addTodo);
@@ -26,7 +26,6 @@ async function loadTodos() {
       const dt = new Date(todo.datetime);
       li.textContent = `${todo.title} (${dt.getFullYear()}/${dt.getMonth()+1}/${dt.getDate()} ${dt.getHours()}:${("0"+dt.getMinutes()).slice(-2)})`;
 
-      // 完了ボタン
       if (!todo.done) {
         const doneBtn = document.createElement("button");
         doneBtn.textContent = "完了";
@@ -40,26 +39,26 @@ async function loadTodos() {
         li.appendChild(undoBtn);
       }
 
-      // 分ける
       if (dt > now && !todo.done) planned.appendChild(li);
       else if (!todo.done) unfinished.appendChild(li);
       else finished.appendChild(li);
     });
+
   } catch (err) {
-    console.error("ロード失敗", err);
-    alert("Todoの取得に失敗しました");
+    console.error("Todoロード失敗", err);
+    alert("Todo取得に失敗しました");
   }
 }
 
 async function toggleDone(id, done) {
   const todos = await (await fetch(`${API_BASE}/todos`)).json();
-  const todo = todos.find(t=>t.id===id);
+  const todo = todos.find(t => t.id === id);
   if (!todo) return;
   todo.done = done;
-  await fetch(`${API_BASE}/todos`, { 
-    method: "POST", 
-    headers: { "Content-Type": "application/json" }, 
-    body: JSON.stringify(todo) 
+  await fetch(`${API_BASE}/todos`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(todo)
   });
 }
 
@@ -85,7 +84,7 @@ async function addTodo() {
 
     if (!res.ok) {
       console.error(await res.text());
-      alert("Todo 追加に失敗しました");
+      alert("Todo追加に失敗しました");
       return;
     }
 
@@ -101,5 +100,4 @@ async function addTodo() {
 }
 
 initLiff();
-
 
