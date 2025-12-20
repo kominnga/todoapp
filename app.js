@@ -9,7 +9,6 @@ window.addEventListener("load", async () => {
   document.getElementById("user").textContent = `ユーザーID: ${userId}`;
 
   document.getElementById("addBtn").addEventListener("click", addTodo);
-
   render();
 });
 
@@ -49,13 +48,15 @@ function addTodo() {
   saveTodos(todos);
 
   // Worker に送信
-  fetch("https://empty-haze-29be.kanikani34423.workers.dev", {
+  fetch("https://empty-haze-29be.kanikani34423.workers.dev/tasks", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(todo)
   });
 
   document.getElementById("title").value="";
+  document.getElementById("date").value="";
+  document.getElementById("startTime").value="";
   render();
 }
 
@@ -79,7 +80,7 @@ function changeStatus(index){
 function render(){
   const list = document.getElementById("list");
   list.innerHTML="";
-  let todos = getTodos();
+  let todos = getTodos().filter(t=>t.userId===userId);
 
   todos.sort((a,b)=>{
     if(a.status==="doing"&&b.status!=="doing") return -1;
