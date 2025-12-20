@@ -1,12 +1,14 @@
-const API_BASE = "https://empty-haze-29be.kanikani34423.workers.dev";
+const API_BASE = "https://empty-haze-29be.kanikani34423.workers.dev/";
 
 async function initLiff() {
   await liff.init({ liffId: "2008726714-eZTej71E" });
-  if (!liff.isLoggedIn()) liff.login();
+  if (!liff.isLoggedIn()) await liff.login();
+
+  document.getElementById("addBtn").addEventListener("click", addTodo);
   loadTodos();
 }
 
-// 取得してリストを分ける
+// Todo取得してリスト分け
 async function loadTodos() {
   const res = await fetch(`${API_BASE}/todos`);
   const todos = await res.json();
@@ -58,24 +60,43 @@ async function toggleDone(id, done) {
   });
 }
 
-// 追加
+// Todo追加
 async function addTodo() {
-  const title = document.getElementById("title").value;
+  const title = document.getElementById("title").value.trim();
   const date = document.getElementById("date").value;
   const time = document.getElementById("time").value;
-  if (!title || !date || !time) return alert("タイトル・日付・時間を入力");
+
+  if (!title || !date || !time) {
+    alert("タイトル・日付・時間を入力してください");
+    return;
+  }
 
   const datetime = new Date(`${date}T${time}`).toISOString();
-
   const profile = await liff.getProfile();
-  await fetch(`${API_BASE}/todos`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ title, datetime, userId: profile.userId }),
-  });
 
-  loadTodos();
+  try {
+    const res = await fetch(`${API_BASE}/todos`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ title, datetime, userId: profile.userId }),
+    });
+
+    if (!res.ok) {
+      console.error(await res.text());
+      alert("Todo 追加に失敗しました");
+      return;
+    }
+
+    document.getElementById("title").value = "";
+    document.getElementById("date").value = "";
+    document.getElementById("time").value = "";
+
+    loadTodos();
+  } catch (err) {
+    console.error(err);
+    alert("ネットワークエラー");
+  }
 }
 
-document.getElementById("addBtn").addEventListener("click", addTodo);
 initLiff();
+
