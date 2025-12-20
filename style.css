@@ -1,22 +1,23 @@
 body {
   font-family: 'Segoe UI', Roboto, sans-serif;
-  background: #0f111a;
-  color: #e0e0e0;
+  background: #f2f4f7;
+  color: #333;
   margin: 0;
   padding: 0;
 }
 
 header {
-  background: linear-gradient(90deg, #1f2230, #2b2f40);
+  background: linear-gradient(90deg, #0a1f44, #113366);
   padding: 1rem;
   text-align: center;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+  color: #fff;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
 
 header h1 {
   margin: 0;
-  color: #0ff;
-  text-shadow: 0 0 8px #0ff;
+  font-weight: 600;
+  letter-spacing: 1px;
 }
 
 .add-task {
@@ -29,25 +30,25 @@ header h1 {
 .add-task input, .add-task button {
   padding: 0.5rem;
   border-radius: 6px;
-  border: none;
+  border: 1px solid #ccc;
   font-size: 1rem;
 }
 
 .add-task input {
-  background: #1f2230;
-  color: #0ff;
+  background: #fff;
+  color: #333;
 }
 
 .add-task button {
-  background: #0ff;
-  color: #0f111a;
+  background: #007bff;
+  color: #fff;
   cursor: pointer;
   font-weight: bold;
   transition: 0.2s;
 }
 
 .add-task button:hover {
-  background: #0cc;
+  background: #0056b3;
 }
 
 .filter {
@@ -58,16 +59,17 @@ header h1 {
 }
 
 .filter button {
-  background: #22263a;
-  color: #0ff;
+  background: #e2e6ea;
+  color: #333;
   border-radius: 6px;
-  border: none;
+  border: 1px solid #ccc;
   padding: 0.4rem 0.8rem;
   cursor: pointer;
+  transition: 0.2s;
 }
 
 .filter button:hover {
-  background: #0cc;
+  background: #cfd3d7;
 }
 
 #list {
@@ -84,33 +86,35 @@ header h1 {
   align-items: center;
   width: 90%;
   max-width: 600px;
-  background: #1a1d29;
+  background: #fff;
   padding: 0.8rem 1rem;
   border-radius: 8px;
-  box-shadow: 0 0 8px rgba(0,255,255,0.2);
+  border-left: 5px solid;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
   transition: 0.3s;
 }
 
-.todo.todo { border-left: 5px solid #0ff; }
-.todo.doing { border-left: 5px solid #ff0; }
-.todo.done { border-left: 5px solid #0f0; opacity: 0.6; }
+.todo.todo { border-color: #007bff; }
+.todo.doing { border-color: #ffc107; }
+.todo.done { border-color: #28a745; opacity: 0.7; }
 
-.todo.late { box-shadow: 0 0 12px #f00; }
-.todo.over { box-shadow: 0 0 12px #ff0; }
+.todo.late { box-shadow: 0 0 12px #dc3545; }
+.todo.over { box-shadow: 0 0 12px #fd7e14; }
 
 .todo-text { font-weight: bold; }
-.todo-time { font-size: 0.85rem; color: #aaa; }
+.todo-time { font-size: 0.85rem; color: #666; }
 
 .todo button {
-  background: #0ff;
+  background: #007bff;
   border: none;
   padding: 0.3rem 0.6rem;
   border-radius: 5px;
   cursor: pointer;
+  color: #fff;
   font-weight: bold;
   transition: 0.2s;
 }
 
 .todo button:hover {
-  background: #0cc;
+  background: #0056b3;
 }
