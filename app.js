@@ -2,7 +2,7 @@ const STORAGE_KEY = "todos";
 let currentFilter = "all";
 
 /* ===== LIFF ===== */
-liff.init({ liffId: "YOUR_LIFF_ID" });
+liff.init({ liffId: "2008726714-eZTej71E" });
 
 /* ===== Storage ===== */
 const getTodos = () => JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
@@ -104,3 +104,4 @@ function render(){
 
 setInterval(render, 60000);
 render();
+
