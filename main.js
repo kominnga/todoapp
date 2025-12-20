@@ -1,109 +1,82 @@
-const WORKER_URL = "https://slient-star-fba7.kanikani34423.workers.dev/";
-const LIFF_ID = "2008726714-eZTej71E";
+const dateInput = document.getElementById("date");
+const timeInput = document.getElementById("time");
+const titleInput = document.getElementById("title");
+const addBtn = document.getElementById("addBtn");
+const todoList = document.getElementById("todoList");
+const todayEl = document.getElementById("today");
+const selectedDateEl = document.getElementById("selectedDate");
 
-let userId = "";
-let tasks = [];
-let filter = "todo";
+let todos = [];
 
-(async () => {
-  await liff.init({ liffId: LIFF_ID });
+// 今日の日付表示
+const now = new Date();
+todayEl.textContent =
+  `${now.getFullYear()}年 ${now.getMonth() + 1}月 ${now.getDate()}日`;
 
-  if (!liff.isLoggedIn()) {
-    liff.login();
-    return;
-  }
+dateInput.value = now.toISOString().slice(0, 10);
+timeInput.value = "12:00";
 
-  const profile = await liff.getProfile();
-  userId = profile.userId;
+updateSelectedDate();
 
-  document.getElementById("userLabel").textContent =
-    `User: ${userId.slice(0, 6)}****`;
+// TODO追加
+addBtn.addEventListener("click", () => {
+  if (!titleInput.value) return;
 
-  await loadTasks();
-})();
+  const datetime = `${dateInput.value}T${timeInput.value}`;
 
-async function loadTasks() {
-  const res = await fetch(
-    `${WORKER_URL}/tasks?userId=${encodeURIComponent(userId)}`
-  );
-  tasks = await res.json();
-  render();
-}
-
-async function addTask() {
-  const title = document.getElementById("title").value;
-  const date = document.getElementById("date").value;
-  const time = document.getElementById("time").value;
-
-  if (!title || !date) return;
-
-  const timestamp = time
-    ? new Date(`${date}T${time}`).getTime()
-    : new Date(`${date}T09:00`).getTime();
-
-  await fetch(`${WORKER_URL}/tasks`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      id: crypto.randomUUID(),
-      userId,
-      title,
-      date,
-      time: timestamp
-    })
+  todos.push({
+    id: crypto.randomUUID(),
+    title: titleInput.value,
+    datetime,
+    done: false
   });
 
-  document.getElementById("title").value = "";
-  await loadTasks();
-}
+  titleInput.value = "";
+  render();
+});
 
-function setFilter(f) {
-  filter = f;
+// 日付変更時
+dateInput.addEventListener("change", updateSelectedDate);
+
+function updateSelectedDate() {
+  const d = new Date(dateInput.value);
+  selectedDateEl.textContent =
+    `${d.getFullYear()}年 ${d.getMonth() + 1}月 ${d.getDate()}日`;
   render();
 }
 
+// 描画
 function render() {
-  const list = document.getElementById("list");
-  list.innerHTML = "";
+  todoList.innerHTML = "";
 
-  tasks
-    .filter(t => t.status === filter)
-    .sort((a, b) => a.time - b.time)
-    .forEach(t => {
-      const div = document.createElement("div");
-      div.className = `task ${t.status}`;
+  const selected = dateInput.value;
 
-      const date = new Date(t.time);
+  todos
+    .filter(t => t.datetime.startsWith(selected))
+    .sort((a, b) => a.datetime.localeCompare(b.datetime))
+    .forEach(todo => {
+      const li = document.createElement("li");
+      li.className = "todo" + (todo.done ? " done" : "");
 
-      div.innerHTML = `
-        <div class="info">
-          <div>${t.title}</div>
-          <div class="time">
-            ${date.toLocaleDateString()} ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-          </div>
-        </div>
-        <button onclick="nextStatus('${t.id}')">
-          ${t.status === "todo" ? "▶" : t.status === "doing" ? "✓" : "↩"}
-        </button>
-      `;
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.checked = todo.done;
+      checkbox.onchange = () => {
+        todo.done = checkbox.checked;
+        render();
+      };
 
-      list.appendChild(div);
+      const time = document.createElement("time");
+      time.textContent = todo.datetime.slice(11, 16);
+
+      const span = document.createElement("span");
+      span.textContent = todo.title;
+
+      li.appendChild(checkbox);
+      li.appendChild(time);
+      li.appendChild(span);
+
+      todoList.appendChild(li);
     });
 }
 
-async function nextStatus(taskId) {
-  const task = tasks.find(t => t.id === taskId);
-  if (!task) return;
-
-  if (task.status === "todo") task.status = "doing";
-  else if (task.status === "doing") task.status = "done";
-  else task.status = "todo";
-
-  await fetch(`${WORKER_URL}/tasks`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(task)
-  });
-
-  await loadTasks();
-}
