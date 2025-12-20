@@ -1,39 +1,36 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<title>LINE TODO</title>
-<link rel="stylesheet" href="style.css">
-<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>企業感ToDo管理</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>LINE TODO</h1>
+  <div class="container">
+    <h1>ToDo管理</h1>
 
-  <div class="input-area">
-    <input type="text" id="title" placeholder="予定タイトル">
-    <input type="date" id="date">
-    <input type="time" id="time">
-    <button id="addBtn">追加</button>
+    <div class="form">
+      <input type="text" id="title" placeholder="タスクタイトル">
+      <input type="date" id="date">
+      <input type="time" id="startTime">
+      <button onclick="addTodo()">追加</button>
+    </div>
+
+    <div class="filters">
+      <button onclick="setFilter('all')" class="filter-btn">全部</button>
+      <button onclick="setFilter('todo')" class="filter-btn">未着手</button>
+      <button onclick="setFilter('doing')" class="filter-btn">今やってる</button>
+      <button onclick="setFilter('done')" class="filter-btn">完了</button>
+    </div>
+
+    <div id="list"></div>
   </div>
 
-  <div class="todo-section">
-    <h2>予定</h2>
-    <ul id="plannedList" class="todo-list"></ul>
-  </div>
-
-  <div class="todo-section">
-    <h2>未完了</h2>
-    <ul id="unfinishedList" class="todo-list"></ul>
-  </div>
-
-  <div class="todo-section">
-    <h2>完了</h2>
-    <ul id="finishedList" class="todo-list"></ul>
-  </div>
-
-<script type="module" src="app.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
+
 
 
 
