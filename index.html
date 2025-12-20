@@ -3,28 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <title>LINE TODO</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 </head>
 <body>
-
-  <header>
-    <h1>📅 TODO</h1>
-    <div id="today"></div>
-  </header>
-
-  <section class="add">
-    <input type="date" id="date">
-    <input type="time" id="time">
-    <input type="text" id="title" placeholder="やること">
-    <button id="addBtn">追加</button>
-  </section>
-
-  <section class="list">
-    <h2 id="selectedDate"></h2>
-    <ul id="todoList"></ul>
-  </section>
+  <h1>LINE TODO</h1>
+  <input type="text" id="title" placeholder="Todoタイトル">
+  <input type="datetime-local" id="datetime">
+  <button id="addBtn">追加</button>
+  <ul id="todoList"></ul>
 
   <script src="app.js"></script>
 </body>
 </html>
+
