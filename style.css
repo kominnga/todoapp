@@ -1,78 +1,20 @@
-body {
-  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
-  margin: 0;
-  padding: 0;
-  background: #f7f7f7;
-}
-
-header {
-  background: #06c755;
-  color: white;
-  padding: 16px;
-  text-align: center;
-}
-
-#today {
-  font-size: 14px;
-  opacity: 0.9;
-}
-
-.add {
-  background: white;
-  padding: 12px;
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-}
-
-.add input {
+body { font-family: sans-serif; padding: 20px; background: #f9f9f9; }
+h1 { text-align: center; }
+.input-area { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 15px; }
+.input-area input, .input-area button {
+  flex: 1 1 120px;
   padding: 8px;
-  font-size: 14px;
-}
-
-.add button {
-  background: #06c755;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.list {
-  padding: 12px;
-}
-
-.list h2 {
   font-size: 16px;
-  margin-bottom: 8px;
+  box-sizing: border-box;
 }
-
-#todoList {
-  list-style: none;
-  padding: 0;
+button { cursor: pointer; }
+.todo-section { margin-bottom: 20px; background: #fff; padding: 10px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+.todo-list { list-style: none; padding: 0; }
+.todo-list li {
+  padding: 6px 8px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid #eee;
+  display: flex; justify-content: space-between; align-items: center;
 }
-
-.todo {
-  background: white;
-  padding: 10px;
-  margin-bottom: 6px;
-  display: flex;
-  align-items: center;
-  border-radius: 4px;
-}
-
-.todo.done {
-  opacity: 0.5;
-  text-decoration: line-through;
-}
-
-.todo time {
-  font-size: 12px;
-  margin-right: 8px;
-  color: #555;
-}
-
-.todo input[type="checkbox"] {
-  margin-right: 8px;
-}
+.todo-list li.done { text-decoration: line-through; color: #999; }
+.todo-list button { margin-left: 5px; padding: 2px 6px; font-size: 12px; }
