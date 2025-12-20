@@ -3,32 +3,42 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>企業感TODOアプリ</title>
+<title>ToDo App + Clock</title>
 <link rel="stylesheet" href="style.css">
-<script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
+<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 </head>
 <body>
-<div class="container">
-  <h1>TODOアプリ</h1>
 
-  <!-- ユーザーID非表示 -->
-  <p id="user" style="display:none;"></p>
+<div class="app-container">
+  <h2>ToDoアプリ</h2>
 
-  <div class="input-area">
+  <!-- タスク入力 -->
+  <div class="input-container">
     <input type="text" id="title" placeholder="タスク名">
     <input type="date" id="date">
     <input type="time" id="startTime">
     <button id="addBtn">追加</button>
   </div>
 
-  <div class="filters">
-    <button onclick="setFilter('all')">全部</button>
-    <button onclick="setFilter('todo')">未着手</button>
-    <button onclick="setFilter('doing')">今やってる</button>
+  <!-- フィルタ -->
+  <div class="filter-container">
+    <button onclick="setFilter('all')">全て</button>
+    <button onclick="setFilter('todo')">未開始</button>
+    <button onclick="setFilter('doing')">進行中</button>
     <button onclick="setFilter('done')">完了</button>
   </div>
 
-  <div id="list" class="todo-list"></div>
+  <!-- タスクリスト -->
+  <div id="list"></div>
+
+  <!-- アナログ時計 + 今やること -->
+  <div class="clock-container">
+    <canvas id="analogClock" width="200" height="200"></canvas>
+    <div id="currentTasks">
+      <h3>今やること</h3>
+      <ul id="tasksList"></ul>
+    </div>
+  </div>
 </div>
 
 <script src="app.js"></script>
