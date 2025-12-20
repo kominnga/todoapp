@@ -2,35 +2,32 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>企業感ToDo管理</title>
+  <title>企業感Todoアプリ</title>
   <link rel="stylesheet" href="style.css">
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 </head>
 <body>
-  <div class="container">
-    <h1>ToDo管理</h1>
+  <header>
+    <h1>タスク管理</h1>
+    <div id="user"></div>
+  </header>
 
-    <div class="form">
-      <input type="text" id="title" placeholder="タスクタイトル">
-      <input type="date" id="date">
-      <input type="time" id="startTime">
-      <button onclick="addTodo()">追加</button>
-    </div>
+  <section class="todo-input">
+    <input type="text" id="title" placeholder="タスク名">
+    <input type="date" id="date">
+    <input type="time" id="startTime">
+    <button onclick="addTodo()">追加</button>
+  </section>
 
-    <div class="filters">
-      <button onclick="setFilter('all')" class="filter-btn">全部</button>
-      <button onclick="setFilter('todo')" class="filter-btn">未着手</button>
-      <button onclick="setFilter('doing')" class="filter-btn">今やってる</button>
-      <button onclick="setFilter('done')" class="filter-btn">完了</button>
-    </div>
+  <section class="filters">
+    <button onclick="setFilter('all')">全部</button>
+    <button onclick="setFilter('todo')">未着手</button>
+    <button onclick="setFilter('doing')">今やってる</button>
+    <button onclick="setFilter('done')">完了</button>
+  </section>
 
-    <div id="list"></div>
-  </div>
+  <section id="list" class="todo-list"></section>
 
   <script src="app.js"></script>
 </body>
 </html>
-
-
-
-
