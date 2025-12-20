@@ -10,7 +10,7 @@ window.addEventListener("load", async () => {
   document.getElementById("addBtn").addEventListener("click", addTodo);
 
   render();
-  setInterval(drawClock, 1000); // 時計更新
+  setInterval(drawClock, 1000);
 });
 
 /* ===== Storage ===== */
@@ -25,7 +25,7 @@ function dayOfWeek(dateStr) {
 }
 
 /* ===== タスク追加 ===== */
-function addTodo() {
+async function addTodo() {
   const title = document.getElementById("title").value;
   const date = document.getElementById("date").value;
   const startTime = document.getElementById("startTime").value;
@@ -48,12 +48,16 @@ function addTodo() {
   todos.push(todo);
   saveTodos(todos);
 
-  // Worker に送信
-  fetch("https://empty-haze-29be.kanikani34423.workers.dev", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(todo)
-  });
+  // Worker に送信（LINE BOT通知）
+  try {
+    await fetch("https://empty-haze-29be.kanikani34423.workers.dev/tasks", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(todo)
+    });
+  } catch (e) {
+    console.error("通知送信エラー:", e);
+  }
 
   document.getElementById("title").value="";
   render();
@@ -132,7 +136,7 @@ function drawFace() {
   ctx.fillStyle = '#fff';
   ctx.fill();
   ctx.strokeStyle = '#333';
-  ctx.lineWidth = 4;
+  ctx.lineWidth = 3;
   ctx.stroke();
 
   ctx.font = `${radius * 0.15}px Arial`;
@@ -140,8 +144,8 @@ function drawFace() {
   ctx.textAlign = "center";
   for(let num = 1; num <= 12; num++){
     const ang = num * Math.PI / 6;
-    const x = Math.sin(ang) * (radius - 25);
-    const y = -Math.cos(ang) * (radius - 25);
+    const x = Math.sin(ang) * (radius - 20);
+    const y = -Math.cos(ang) * (radius - 20);
     ctx.fillStyle = "#000";
     ctx.fillText(num, x, y);
   }
@@ -153,8 +157,8 @@ function drawHands() {
   const minute = now.getMinutes();
   const second = now.getSeconds();
 
-  drawHand((hour + minute/60) * Math.PI/6, radius*0.5, 6);
-  drawHand((minute + second/60) * Math.PI/30, radius*0.7, 4);
+  drawHand((hour + minute/60) * Math.PI/6, radius*0.5, 5);
+  drawHand((minute + second/60) * Math.PI/30, radius*0.7, 3);
   drawHand(second * Math.PI/30, radius*0.85, 2, "red");
 
   updateTasks(now.getHours());
