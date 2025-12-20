@@ -2,9 +2,8 @@ let userId = "";
 const STORAGE_KEY = "todos";
 let currentFilter = "all";
 
-/* ===== LIFF 初期化 ===== */
 window.addEventListener("load", async () => {
-  await liff.init({ liffId: "2008726714-eZTej71E" });
+  await liff.init({ liffId: "YOUR_LIFF_ID" });
   userId = liff.getContext().userId || "local_user";
 
   document.getElementById("addBtn").addEventListener("click", addTodo);
@@ -13,15 +12,15 @@ window.addEventListener("load", async () => {
   setInterval(drawClock, 1000);
 });
 
-/* ===== Storage ===== */
 const getTodos = () => JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
 const saveTodos = (todos) => localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
 
-/* ===== util ===== */
 function nowHHMM() { return new Date().toTimeString().slice(0,5); }
-function dayOfWeek(dateStr) { const days = ["日","月","火","水","木","金","土"]; return days[new Date(dateStr).getDay()]; }
+function dayOfWeek(dateStr) {
+  const days = ["日","月","火","水","木","金","土"];
+  return days[new Date(dateStr).getDay()];
+}
 
-/* ===== タスク追加 ===== */
 function addTodo() {
   const title = document.getElementById("title").value;
   const date = document.getElementById("date").value;
@@ -45,8 +44,8 @@ function addTodo() {
   todos.push(todo);
   saveTodos(todos);
 
-  // Worker に送信（LINE BOT通知）
-  fetch("https://empty-haze-29be.kanikani34423.workers.dev/", {
+  // Cloudflare Workerに送信してLINE通知
+  fetch("https://YOUR_WORKER_DOMAIN/tasks", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(todo)
@@ -56,10 +55,8 @@ function addTodo() {
   render();
 }
 
-/* ===== フィルタ ===== */
 function setFilter(filter) { currentFilter = filter; render(); }
 
-/* ===== 状態変更 ===== */
 function changeStatus(index){
   const todos = getTodos();
   const todo = todos[index];
@@ -72,7 +69,6 @@ function changeStatus(index){
   render();
 }
 
-/* ===== 描画 ===== */
 function render(){
   const list = document.getElementById("list");
   list.innerHTML="";
@@ -95,7 +91,10 @@ function render(){
     if(todo.status==="doing" && todo.startedAt && Date.now()-todo.startedAt>60*60*1000) div.classList.add("over");
 
     let duration="";
-    if(todo.startedAt && todo.endedAt){ const min = Math.floor((todo.endedAt - todo.startedAt)/60000); duration = ` ⏱${min}分`; }
+    if(todo.startedAt && todo.endedAt){
+      const min = Math.floor((todo.endedAt - todo.startedAt)/60000);
+      duration = ` ⏱${min}分`;
+    }
 
     div.innerHTML=`
       <div>
@@ -169,14 +168,17 @@ function drawHand(pos, length, width, color="#000"){
 function updateTasks(currentHour){
   const tasksList = document.getElementById("tasksList");
   tasksList.innerHTML = "";
+
   const todos = getTodos();
   const filtered = todos.filter(t=>{
     const taskHour = parseInt(t.startTime?.split(":")[0]);
     return (!t.status || t.status!=="done") && taskHour === currentHour;
   });
+
   filtered.forEach(t=>{
     const li = document.createElement("li");
     li.textContent = t.title;
     tasksList.appendChild(li);
   });
 }
+
