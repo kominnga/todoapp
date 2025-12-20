@@ -1,21 +1,42 @@
 const STORAGE_KEY = "todos";
 let currentFilter = "all";
+let userId = null;
 
-/* ===== LIFF ===== */
-liff.init({ liffId: "2008726714-eZTej71E" });
+// =========================
+// LIFF 初期化
+// =========================
+async function main() {
+  await liff.init({ liffId: "YOUR_LIFF_ID" });
+  if (!liff.isInClient()) {
+    alert("LINEアプリ内で開いてください");
+    return;
+  }
+  userId = liff.getContext().userId;
+  document.getElementById("user").textContent = `ユーザーID: ${userId}`;
 
-/* ===== Storage ===== */
+  render();
+}
+
+main();
+
+// =========================
+// Storage
+// =========================
 const getTodos = () => JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
 const saveTodos = (todos) => localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
 
-/* ===== util ===== */
+// =========================
+// util
+// =========================
 function nowHHMM() { return new Date().toTimeString().slice(0,5); }
 function dayOfWeek(dateStr) {
   const days = ["日","月","火","水","木","金","土"];
   return days[new Date(dateStr).getDay()];
 }
 
-/* ===== 追加 ===== */
+// =========================
+// タスク追加
+// =========================
 async function addTodo() {
   const title = document.getElementById("title").value;
   const date = document.getElementById("date").value;
@@ -24,8 +45,8 @@ async function addTodo() {
 
   const todos = getTodos();
   const todo = {
-    id: crypto.randomUUID(),
-    userId: liff.getContext().userId,
+    id: Date.now().toString(),
+    userId,
     title, date, startTime,
     status:"todo", notified:false, created:Date.now(),
     startedAt:null, endedAt:null
@@ -35,47 +56,60 @@ async function addTodo() {
   document.getElementById("title").value="";
   render();
 
-  // Workerに送信（LINE & メール通知用）
-  fetch("https://empty-haze-29be.kanikani34423.workers.dev", {
+  // Workerに送信
+  fetch("https://YOUR_WORKER_DOMAIN/tasks", {
     method:"POST",
     headers:{ "Content-Type":"application/json" },
     body: JSON.stringify(todo)
   });
 }
 
-/* ===== フィルタ ===== */
+// =========================
+// フィルタ
+// =========================
 function setFilter(filter) { currentFilter = filter; render(); }
 
-/* ===== 状態変更 ===== */
+// =========================
+// 状態変更
+// =========================
 function changeStatus(index){
   const todos = getTodos();
   const todo = todos[index];
 
-  if(todo.status==="todo"){ todo.status="doing"; todo.startedAt=Date.now(); }
-  else if(todo.status==="doing"){ todo.status="done"; todo.endedAt=Date.now(); }
-  else { todo.status="todo"; todo.notified=false; }
+  if(todo.status==="todo"){ 
+    todo.status="doing"; 
+    todo.startedAt=Date.now();
+    if(liff.isInClient()){ 
+      liff.sendMessages([{ type:"text", text:`▶ 実行開始\n${todo.title}` }]); 
+    }
+  } else if(todo.status==="doing"){ 
+    todo.status="done"; 
+    todo.endedAt=Date.now(); 
+  } else { 
+    todo.status="todo"; 
+    todo.notified=false; 
+  }
 
   saveTodos(todos);
   render();
 }
 
-/* ===== 描画 ===== */
+// =========================
+// 描画
+// =========================
 function render(){
   const list = document.getElementById("list");
   list.innerHTML="";
   let todos = getTodos();
 
-  todos = todos.filter(t => t.userId === liff.getContext().userId);
-
-  todos.sort((a,b)=>{
-    if(a.status==="doing"&&b.status!=="doing") return -1;
-    if(a.status!=="doing"&&b.status==="doing") return 1;
-    return a.created - b.created;
-  });
+  todos = todos.filter(t=>t.userId===userId);
 
   if(currentFilter!=="all") todos = todos.filter(t=>t.status===currentFilter);
 
-  if(!todos.length){ list.innerHTML="<p style='text-align:center;'>ToDoなし</p>"; return; }
+  if(!todos.length){ 
+    list.innerHTML="<p style='text-align:center;'>ToDoなし</p>"; 
+    return; 
+  }
 
   const now = nowHHMM();
   todos.forEach((todo,i)=>{
@@ -101,7 +135,3 @@ function render(){
     list.appendChild(div);
   });
 }
-
-setInterval(render, 60000);
-render();
-
