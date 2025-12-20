@@ -17,6 +17,7 @@ header {
   font-size: 0.75rem;
   margin-top: 0.2rem;
   color: #ecf0f1;
+  display:none;
 }
 
 #add-task {
@@ -120,3 +121,4 @@ header {
     font-size: 0.75rem;
   }
 }
+
