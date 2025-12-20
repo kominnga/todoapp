@@ -1,20 +1,31 @@
+let userId = "";
 const STORAGE_KEY = "todos";
 let currentFilter = "all";
-let userId = null;
 
-// ===== Storage =====
+/* ===== LIFF 初期化 ===== */
+window.addEventListener("load", async () => {
+  await liff.init({ liffId: "2008726714-eZTej71E" });
+  userId = liff.getContext().userId;
+  document.getElementById("user").textContent = `ユーザーID: ${userId}`;
+
+  document.getElementById("addBtn").addEventListener("click", addTodo);
+
+  render();
+});
+
+/* ===== Storage ===== */
 const getTodos = () => JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
 const saveTodos = (todos) => localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
 
-// ===== util =====
+/* ===== util ===== */
 function nowHHMM() { return new Date().toTimeString().slice(0,5); }
 function dayOfWeek(dateStr) {
   const days = ["日","月","火","水","木","金","土"];
   return days[new Date(dateStr).getDay()];
 }
 
-// ===== タスク追加 =====
-async function addTodo() {
+/* ===== タスク追加 ===== */
+function addTodo() {
   const title = document.getElementById("title").value;
   const date = document.getElementById("date").value;
   const startTime = document.getElementById("startTime").value;
@@ -22,59 +33,54 @@ async function addTodo() {
 
   const todos = getTodos();
   const todo = {
-    id: Date.now().toString(),
-    userId,
-    title, date, startTime,
-    status:"todo", notifiedBefore:false, notifiedLate:false,
-    createdAt: Date.now(),
-    startedAt:null, endedAt:null
+    title, date, startTime, status:"todo",
+    created: Date.now(), startedAt:null, endedAt:null
   };
   todos.push(todo);
   saveTodos(todos);
+
   document.getElementById("title").value="";
   render();
-
-  // Worker に送信
-  fetch("https://empty-haze-29be.kanikani34423.workers.dev", {
-    method:"POST",
-    headers:{ "Content-Type":"application/json" },
-    body: JSON.stringify(todo)
-  });
 }
 
-// ===== フィルタ =====
+/* ===== フィルタ ===== */
 function setFilter(filter) { currentFilter = filter; render(); }
 
-// ===== 状態変更 =====
+/* ===== 状態変更 ===== */
 function changeStatus(index){
   const todos = getTodos();
   const todo = todos[index];
 
   if(todo.status==="todo"){ todo.status="doing"; todo.startedAt=Date.now(); }
   else if(todo.status==="doing"){ todo.status="done"; todo.endedAt=Date.now(); }
-  else { todo.status="todo"; todo.notifiedBefore=false; todo.notifiedLate=false; }
+  else { todo.status="todo"; }
 
   saveTodos(todos);
   render();
 }
 
-// ===== 描画 =====
+/* ===== 描画 ===== */
 function render(){
   const list = document.getElementById("list");
   list.innerHTML="";
   let todos = getTodos();
 
-  todos = todos.filter(t => t.userId === userId);
+  const todayMonth = new Date().toISOString().slice(0,7);
+  todos = todos.filter(t=>!t.date || t.date.startsWith(todayMonth));
+
+  todos.sort((a,b)=>{
+    if(a.status==="doing"&&b.status!=="doing") return -1;
+    if(a.status!=="doing"&&b.status==="doing") return 1;
+    return a.created - b.created;
+  });
 
   if(currentFilter!=="all") todos = todos.filter(t=>t.status===currentFilter);
-
   if(!todos.length){ list.innerHTML="<p style='text-align:center;'>ToDoなし</p>"; return; }
 
   const now = nowHHMM();
   todos.forEach((todo,i)=>{
     const div = document.createElement("div");
     div.className=`todo ${todo.status}`;
-
     if(todo.status==="todo" && todo.startTime && todo.startTime<now) div.classList.add("late");
     if(todo.status==="doing" && todo.startedAt && Date.now()-todo.startedAt>60*60*1000) div.classList.add("over");
 
@@ -94,16 +100,3 @@ function render(){
     list.appendChild(div);
   });
 }
-
-// ===== LIFF 初期化 =====
-async function main() {
-  await liff.init({ liffId: "2008726714-eZTej71E" });
-  if (!liff.isInClient()) { alert("LINEアプリ内で開いてください"); return; }
-  userId = liff.getContext().userId;
-  document.getElementById("user").textContent = `ユーザーID: ${userId}`;
-  render();
-}
-
-// ===== イベント登録 =====
-window.addEventListener("load", main);
-document.getElementById("addBtn").addEventListener("click", addTodo);
