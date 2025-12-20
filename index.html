@@ -1,41 +1,29 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <title>Corporate ToDo</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="style.css" />
-  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <meta charset="UTF-8">
+  <title>LINE TODO</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
   <header>
-    <h1>Corporate Task Manager</h1>
-    <p id="userLabel">Loading...</p>
+    <h1>📅 TODO</h1>
+    <div id="today"></div>
   </header>
 
-  <main>
-    <!-- 追加 -->
-    <section class="add">
-      <input id="title" placeholder="タスク名" />
-      <input id="date" type="date" />
-      <input id="time" type="time" />
-      <button onclick="addTask()">＋ 追加</button>
-    </section>
+  <section class="add">
+    <input type="date" id="date">
+    <input type="time" id="time">
+    <input type="text" id="title" placeholder="やること">
+    <button id="addBtn">追加</button>
+  </section>
 
-    <!-- フィルタ -->
-    <section class="tabs">
-      <button onclick="setFilter('doing')">今やってる</button>
-      <button onclick="setFilter('todo')">未着手</button>
-      <button onclick="setFilter('done')">完了</button>
-    </section>
-
-    <!-- 一覧 -->
-    <section id="list"></section>
-  </main>
-
-  <footer>
-    LINE × Cloudflare Workers
-  </footer>
+  <section class="list">
+    <h2 id="selectedDate"></h2>
+    <ul id="todoList"></ul>
+  </section>
 
   <script src="app.js"></script>
 </body>
