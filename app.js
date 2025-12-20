@@ -2,6 +2,7 @@ let userId = "";
 const STORAGE_KEY = "todos";
 let currentFilter = "all";
 
+/* ===== LIFF 初期化 ===== */
 window.addEventListener("load", async () => {
   await liff.init({ liffId: "YOUR_LIFF_ID" });
   userId = liff.getContext().userId || "local_user";
@@ -9,18 +10,21 @@ window.addEventListener("load", async () => {
   document.getElementById("addBtn").addEventListener("click", addTodo);
 
   render();
-  setInterval(drawClock, 1000);
+  setInterval(drawClock, 1000); // 時計更新
 });
 
+/* ===== Storage ===== */
 const getTodos = () => JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
 const saveTodos = (todos) => localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
 
+/* ===== util ===== */
 function nowHHMM() { return new Date().toTimeString().slice(0,5); }
 function dayOfWeek(dateStr) {
   const days = ["日","月","火","水","木","金","土"];
   return days[new Date(dateStr).getDay()];
 }
 
+/* ===== タスク追加 ===== */
 function addTodo() {
   const title = document.getElementById("title").value;
   const date = document.getElementById("date").value;
@@ -39,12 +43,13 @@ function addTodo() {
     notifiedLate: false,
     createdAt: Date.now(),
     startedAt: null,
-    endedAt: null
+    endedAt: null,
+    time: new Date(`${date}T${startTime}`).getTime()
   };
   todos.push(todo);
   saveTodos(todos);
 
-  // Cloudflare Workerに送信してLINE通知
+  // Worker に送信（LINE通知）
   fetch("https://YOUR_WORKER_DOMAIN/tasks", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -55,8 +60,10 @@ function addTodo() {
   render();
 }
 
+/* ===== フィルタ ===== */
 function setFilter(filter) { currentFilter = filter; render(); }
 
+/* ===== 状態変更 ===== */
 function changeStatus(index){
   const todos = getTodos();
   const todo = todos[index];
@@ -69,6 +76,7 @@ function changeStatus(index){
   render();
 }
 
+/* ===== 描画 ===== */
 function render(){
   const list = document.getElementById("list");
   list.innerHTML="";
@@ -181,4 +189,3 @@ function updateTasks(currentHour){
     tasksList.appendChild(li);
   });
 }
-
