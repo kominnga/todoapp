@@ -3,32 +3,34 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TODO管理</title>
+<title>企業感TODOアプリ</title>
 <link rel="stylesheet" href="style.css">
-<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+<script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
 </head>
 <body>
-  <header>
-    <h1>TODO管理</h1>
-  </header>
+<div class="container">
+  <h1>TODOアプリ</h1>
 
-  <section id="add-task">
+  <!-- ユーザーID非表示 -->
+  <p id="user" style="display:none;"></p>
+
+  <div class="input-area">
     <input type="text" id="title" placeholder="タスク名">
     <input type="date" id="date">
     <input type="time" id="startTime">
     <button id="addBtn">追加</button>
-  </section>
+  </div>
 
-  <section id="filters">
+  <div class="filters">
     <button onclick="setFilter('all')">全部</button>
     <button onclick="setFilter('todo')">未着手</button>
     <button onclick="setFilter('doing')">今やってる</button>
     <button onclick="setFilter('done')">完了</button>
-  </section>
+  </div>
 
-  <section id="list"></section>
+  <div id="list" class="todo-list"></div>
+</div>
 
 <script src="app.js"></script>
 </body>
 </html>
-
