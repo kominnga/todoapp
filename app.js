@@ -1,24 +1,11 @@
-// ==========================
-// 設定
-// ==========================
 const API_BASE = "https://empty-haze-29be.kanikani34423.workers.dev"; // Worker URL
-const LIFF_ID = "YOUR_LIFF_ID"; // ここを自分の LIFF ID に置き換える
+const LIFF_ID = "2008726714-eZTej71E"; // 自分のLIFF IDに置き換え
 
-// ==========================
-// 初期化
-// ==========================
 async function initLiff() {
   try {
-    // LIFF初期化
     await liff.init({ liffId: LIFF_ID });
-
-    // ログイン確認
     if (!liff.isLoggedIn()) await liff.login();
-
-    // 追加ボタンイベント
     document.getElementById("addBtn").addEventListener("click", addTodo);
-
-    // Todo読み込み
     loadTodos();
   } catch (err) {
     console.error("LIFF 初期化エラー", err);
@@ -26,9 +13,6 @@ async function initLiff() {
   }
 }
 
-// ==========================
-// Todo読み込み
-// ==========================
 async function loadTodos() {
   try {
     const res = await fetch(`${API_BASE}/todos`);
@@ -39,7 +23,6 @@ async function loadTodos() {
     const unfinished = document.getElementById("unfinishedList");
     const finished = document.getElementById("finishedList");
 
-    // リスト初期化
     planned.innerHTML = unfinished.innerHTML = finished.innerHTML = "";
 
     const now = new Date();
@@ -49,7 +32,6 @@ async function loadTodos() {
       const dt = new Date(todo.datetime);
       li.textContent = `${todo.title} (${dt.getFullYear()}/${dt.getMonth()+1}/${dt.getDate()} ${dt.getHours()}:${("0"+dt.getMinutes()).slice(-2)})`;
 
-      // 完了/未完了ボタン
       if (!todo.done) {
         const doneBtn = document.createElement("button");
         doneBtn.textContent = "完了";
@@ -63,7 +45,6 @@ async function loadTodos() {
         li.appendChild(undoBtn);
       }
 
-      // リスト振り分け
       if (dt > now && !todo.done) planned.appendChild(li);
       else if (!todo.done) unfinished.appendChild(li);
       else finished.appendChild(li);
@@ -74,9 +55,6 @@ async function loadTodos() {
   }
 }
 
-// ==========================
-// Todo 完了状態切替
-// ==========================
 async function toggleDone(id, done) {
   try {
     const todos = await (await fetch(`${API_BASE}/todos`)).json();
@@ -95,9 +73,6 @@ async function toggleDone(id, done) {
   }
 }
 
-// ==========================
-// Todo 追加
-// ==========================
 async function addTodo() {
   const title = document.getElementById("title").value.trim();
   const date = document.getElementById("date").value;
@@ -129,7 +104,6 @@ async function addTodo() {
       return;
     }
 
-    // 入力クリア
     document.getElementById("title").value = "";
     document.getElementById("date").value = "";
     document.getElementById("time").value = "";
@@ -141,7 +115,4 @@ async function addTodo() {
   }
 }
 
-// ==========================
-// 実行
-// ==========================
 initLiff();
