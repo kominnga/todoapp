@@ -50,7 +50,7 @@ function addTodo() {
   saveTodos(todos);
 
   // Worker に送信（LINE通知）
-  fetch("https://empty-haze-29be.kanikani34423.workers.dev", {
+  fetch("https://empty-haze-29be.kanikani34423.workers.dev/tasks", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(todo)
@@ -189,4 +189,5 @@ function updateTasks(currentHour){
     tasksList.appendChild(li);
   });
 }
+
 
