@@ -7,33 +7,46 @@ body {
 }
 
 .container {
-  max-width: 400px;  /* ここでスマホでも収まる幅に制限 */
-  margin: 20px auto;
-  padding: 15px;
+  max-width: 360px; /* スマホ向け */
+  margin: 15px auto;
+  padding: 10px;
   background: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .input-area {
   display: flex;
-  flex-wrap: wrap;   /* 幅が足りない場合は折り返す */
+  flex-wrap: wrap;
   gap: 5px;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
 }
 
-.input-area input, .input-area button {
-  flex: 1 1 auto;
-  padding: 8px;
-  font-size: 14px;
-  border-radius: 6px;
+.input-area input[type="text"] {
+  width: 100%; /* タスク名は全幅 */
+  padding: 6px;
+  font-size: 13px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.input-area input[type="date"],
+.input-area input[type="time"] {
+  width: 48%; /* 日付・時間は半分ずつ */
+  padding: 5px;
+  font-size: 12px;
+  border-radius: 5px;
   border: 1px solid #ccc;
 }
 
 .input-area button {
+  width: 100%; /* ボタンは下に折り返す */
+  padding: 6px;
+  font-size: 13px;
+  border-radius: 5px;
+  border: none;
   background-color: #0078d4;
   color: #fff;
-  border: none;
   cursor: pointer;
 }
 
@@ -41,14 +54,14 @@ body {
   display: flex;
   flex-wrap: wrap;
   gap: 5px;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
 }
 
 .filters button {
-  flex: 1 1 auto;
-  padding: 6px;
-  font-size: 13px;
-  border-radius: 6px;
+  flex: 1 1 30%; /* 3つ並ぶ */
+  padding: 5px;
+  font-size: 12px;
+  border-radius: 5px;
   border: 1px solid #0078d4;
   background-color: #e1f0ff;
   cursor: pointer;
@@ -58,11 +71,12 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px;
-  margin-bottom: 8px;
-  border-radius: 6px;
+  padding: 6px;
+  margin-bottom: 6px;
+  border-radius: 5px;
   border: 1px solid #ddd;
   background-color: #fafafa;
+  font-size: 13px;
 }
 
 .todo button {
@@ -76,10 +90,10 @@ body {
 }
 
 .todo-text {
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .todo-time {
-  font-size: 12px;
+  font-size: 11px;
   color: #666;
 }
