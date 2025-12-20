@@ -1,4 +1,4 @@
-const API_BASE = "https://empty-haze-29be.kanikani34423.workers.dev/";
+const API_BASE = "https://empty-haze-29be.kanikani34423.workers.dev";
 
 async function initLiff() {
   await liff.init({ liffId: "2008726714-eZTej71E" });
@@ -8,46 +8,49 @@ async function initLiff() {
   loadTodos();
 }
 
-// Todo取得してリスト分け
 async function loadTodos() {
-  const res = await fetch(`${API_BASE}/todos`);
-  const todos = await res.json();
+  try {
+    const res = await fetch(`${API_BASE}/todos`);
+    const todos = await res.json();
 
-  const planned = document.getElementById("plannedList");
-  const unfinished = document.getElementById("unfinishedList");
-  const finished = document.getElementById("finishedList");
+    const planned = document.getElementById("plannedList");
+    const unfinished = document.getElementById("unfinishedList");
+    const finished = document.getElementById("finishedList");
 
-  planned.innerHTML = unfinished.innerHTML = finished.innerHTML = "";
+    planned.innerHTML = unfinished.innerHTML = finished.innerHTML = "";
 
-  const now = new Date();
+    const now = new Date();
 
-  todos.forEach(todo => {
-    const li = document.createElement("li");
-    const dt = new Date(todo.datetime);
-    li.textContent = `${todo.title} (${dt.getFullYear()}/${dt.getMonth()+1}/${dt.getDate()} ${dt.getHours()}:${("0"+dt.getMinutes()).slice(-2)})`;
+    todos.forEach(todo => {
+      const li = document.createElement("li");
+      const dt = new Date(todo.datetime);
+      li.textContent = `${todo.title} (${dt.getFullYear()}/${dt.getMonth()+1}/${dt.getDate()} ${dt.getHours()}:${("0"+dt.getMinutes()).slice(-2)})`;
 
-    // 完了ボタン
-    if (!todo.done) {
-      const doneBtn = document.createElement("button");
-      doneBtn.textContent = "完了";
-      doneBtn.onclick = async () => { await toggleDone(todo.id, true); loadTodos(); };
-      li.appendChild(doneBtn);
-    } else {
-      li.classList.add("done");
-      const undoBtn = document.createElement("button");
-      undoBtn.textContent = "未完了に戻す";
-      undoBtn.onclick = async () => { await toggleDone(todo.id, false); loadTodos(); };
-      li.appendChild(undoBtn);
-    }
+      // 完了ボタン
+      if (!todo.done) {
+        const doneBtn = document.createElement("button");
+        doneBtn.textContent = "完了";
+        doneBtn.onclick = async () => { await toggleDone(todo.id, true); loadTodos(); };
+        li.appendChild(doneBtn);
+      } else {
+        li.classList.add("done");
+        const undoBtn = document.createElement("button");
+        undoBtn.textContent = "未完了に戻す";
+        undoBtn.onclick = async () => { await toggleDone(todo.id, false); loadTodos(); };
+        li.appendChild(undoBtn);
+      }
 
-    // 分ける
-    if (dt > now && !todo.done) planned.appendChild(li);
-    else if (!todo.done) unfinished.appendChild(li);
-    else finished.appendChild(li);
-  });
+      // 分ける
+      if (dt > now && !todo.done) planned.appendChild(li);
+      else if (!todo.done) unfinished.appendChild(li);
+      else finished.appendChild(li);
+    });
+  } catch (err) {
+    console.error("ロード失敗", err);
+    alert("Todoの取得に失敗しました");
+  }
 }
 
-// 完了状態切替
 async function toggleDone(id, done) {
   const todos = await (await fetch(`${API_BASE}/todos`)).json();
   const todo = todos.find(t=>t.id===id);
@@ -60,7 +63,6 @@ async function toggleDone(id, done) {
   });
 }
 
-// Todo追加
 async function addTodo() {
   const title = document.getElementById("title").value.trim();
   const date = document.getElementById("date").value;
@@ -99,4 +101,5 @@ async function addTodo() {
 }
 
 initLiff();
+
 
