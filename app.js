@@ -2,21 +2,23 @@
 // 設定
 // ==========================
 const API_BASE = "https://empty-haze-29be.kanikani34423.workers.dev"; // Worker URL
-const LIFF_ID = "2008726714-eZTej71E"; // ここを自分の LIFF ID に置き換える
+const LIFF_ID = "YOUR_LIFF_ID"; // ここを自分の LIFF ID に置き換える
 
 // ==========================
 // 初期化
 // ==========================
 async function initLiff() {
   try {
-    // キャッシュ回避のため v=2 を付与して開くことも可能
+    // LIFF初期化
     await liff.init({ liffId: LIFF_ID });
+
+    // ログイン確認
     if (!liff.isLoggedIn()) await liff.login();
 
-    // ボタンにイベント登録
+    // 追加ボタンイベント
     document.getElementById("addBtn").addEventListener("click", addTodo);
 
-    // 最初の Todo 読み込み
+    // Todo読み込み
     loadTodos();
   } catch (err) {
     console.error("LIFF 初期化エラー", err);
@@ -25,7 +27,7 @@ async function initLiff() {
 }
 
 // ==========================
-// Todo 読み込み
+// Todo読み込み
 // ==========================
 async function loadTodos() {
   try {
@@ -47,7 +49,7 @@ async function loadTodos() {
       const dt = new Date(todo.datetime);
       li.textContent = `${todo.title} (${dt.getFullYear()}/${dt.getMonth()+1}/${dt.getDate()} ${dt.getHours()}:${("0"+dt.getMinutes()).slice(-2)})`;
 
-      // 完了 / 未完了ボタン
+      // 完了/未完了ボタン
       if (!todo.done) {
         const doneBtn = document.createElement("button");
         doneBtn.textContent = "完了";
@@ -61,7 +63,7 @@ async function loadTodos() {
         li.appendChild(undoBtn);
       }
 
-      // 予定 / 未完了 / 完了に振り分け
+      // リスト振り分け
       if (dt > now && !todo.done) planned.appendChild(li);
       else if (!todo.done) unfinished.appendChild(li);
       else finished.appendChild(li);
