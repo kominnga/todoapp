@@ -1,22 +1,92 @@
-body { font-family: "Arial", sans-serif; background:#f2f2f2; margin:0; padding:0; }
-.app-container { max-width:400px; margin:20px auto; padding:15px; background:#fff; border-radius:8px; box-shadow:0 0 10px rgba(0,0,0,0.1);}
-h2 { text-align:center; color:#333; }
-.input-container { display:flex; flex-wrap:wrap; gap:5px; margin-bottom:10px; }
-.input-container input, .input-container button { flex:1; padding:8px; border-radius:4px; border:1px solid #ccc; font-size:14px; }
-.input-container button { background:#007bff; color:#fff; border:none; cursor:pointer; }
-.input-container button:hover { background:#0056b3; }
-.filter-container { display:flex; justify-content:space-between; margin-bottom:10px; }
-.filter-container button { flex:1; margin:0 2px; padding:5px; font-size:12px; cursor:pointer; }
-#list .todo { display:flex; justify-content:space-between; align-items:center; padding:5px; border-bottom:1px solid #eee; }
-#list .todo-text { font-size:14px; color:#333; }
-#list .todo-time { font-size:12px; color:#666; }
-#list button { font-size:12px; padding:2px 5px; border:none; border-radius:3px; background:#28a745; color:#fff; cursor:pointer; }
-#list button:hover { background:#218838; }
-.clock-container { display:flex; justify-content:space-between; align-items:center; margin-top:15px; }
-#analogClock { border:1px solid #ccc; border-radius:50%; background:#fff; }
-#currentTasks { flex:1; margin-left:10px; }
-#currentTasks h3 { font-size:14px; margin-bottom:5px; color:#333; }
-#currentTasks ul { padding-left:15px; margin:0; }
-#currentTasks li { font-size:12px; margin-bottom:3px; }
+body {
+  font-family: Arial, sans-serif;
+  background: #f5f5f5;
+  margin: 0;
+  padding: 0;
+}
 
+.app-container {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 10px;
+  background: #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  border-radius: 8px;
+}
 
+h2 { text-align: center; }
+
+.input-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.input-container input[type="text"],
+.input-container input[type="date"],
+.input-container input[type="time"] {
+  flex: 1 1 80px;
+  padding: 5px;
+  font-size: 14px;
+}
+
+.input-container button {
+  flex: 1 1 60px;
+  padding: 5px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.filter-container {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.filter-container button {
+  flex: 1;
+  margin: 0 2px;
+  padding: 5px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+#list .todo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px;
+  margin-bottom: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+#list .todo.done { background: #d4edda; }
+#list .todo.doing { background: #fff3cd; }
+#list .todo.todo { background: #f8d7da; }
+#list .todo.late { border-left: 4px solid red; }
+
+#list .todo button {
+  margin-left: 5px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.clock-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+
+#currentTasks {
+  flex: 1;
+  margin-left: 10px;
+}
+
+#currentTasks ul {
+  padding-left: 16px;
+  font-size: 14px;
+}
