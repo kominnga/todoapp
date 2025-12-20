@@ -10,7 +10,7 @@ window.addEventListener("load", async () => {
   document.getElementById("addBtn").addEventListener("click", addTodo);
 
   render();
-  setInterval(drawClock, 1000); // 時計更新
+  setInterval(drawClock, 1000);
 });
 
 /* ===== Storage ===== */
@@ -43,13 +43,12 @@ function addTodo() {
     notifiedLate: false,
     createdAt: Date.now(),
     startedAt: null,
-    endedAt: null,
-    time: new Date(`${date}T${startTime}`).getTime()
+    endedAt: null
   };
   todos.push(todo);
   saveTodos(todos);
 
-  // Worker に送信（LINE通知）
+  // Worker に送信
   fetch("https://empty-haze-29be.kanikani34423.workers.dev/tasks", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -63,10 +62,11 @@ function addTodo() {
 /* ===== フィルタ ===== */
 function setFilter(filter) { currentFilter = filter; render(); }
 
-/* ===== 状態変更 ===== */
-function changeStatus(index){
+/* ===== 状態変更（IDベース） ===== */
+function changeStatusById(id){
   const todos = getTodos();
-  const todo = todos[index];
+  const todo = todos.find(t => t.id === id);
+  if(!todo) return;
 
   if(todo.status==="todo"){ todo.status="doing"; todo.startedAt=Date.now(); }
   else if(todo.status==="doing"){ todo.status="done"; todo.endedAt=Date.now(); }
@@ -92,7 +92,7 @@ function render(){
   if(!todos.length){ list.innerHTML="<p style='text-align:center;'>ToDoなし</p>"; return; }
 
   const now = nowHHMM();
-  todos.forEach((todo,i)=>{
+  todos.forEach((todo)=>{
     const div = document.createElement("div");
     div.className=`todo ${todo.status}`;
     if(todo.status==="todo" && todo.startTime && todo.startTime<now) div.classList.add("late");
@@ -109,7 +109,7 @@ function render(){
         <div class="todo-text">${todo.title}</div>
         <div class="todo-time">${todo.date}(${dayOfWeek(todo.date)}) ${todo.startTime || ""}${duration}</div>
       </div>
-      <button onclick="changeStatus(${i})">${todo.status==="todo"?"▶":todo.status==="doing"?"✓":"↩"}</button>
+      <button onclick="changeStatusById('${todo.id}')">${todo.status==="todo"?"▶":todo.status==="doing"?"✓":"↩"}</button>
     `;
     list.appendChild(div);
   });
@@ -189,5 +189,3 @@ function updateTasks(currentHour){
     tasksList.appendChild(li);
   });
 }
-
-
