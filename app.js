@@ -4,7 +4,7 @@ let currentFilter = "all";
 
 /* ===== LIFF 初期化 ===== */
 window.addEventListener("load", async () => {
-  await liff.init({ liffId: "YOUR_LIFF_ID" });
+  await liff.init({ liffId: "2008726714-eZTej71E" });
   userId = liff.getContext().userId || "local_user";
 
   document.getElementById("addBtn").addEventListener("click", addTodo);
@@ -50,7 +50,7 @@ function addTodo() {
   saveTodos(todos);
 
   // Worker に送信（LINE通知）
-  fetch("https://YOUR_WORKER_DOMAIN/tasks", {
+  fetch("https://empty-haze-29be.kanikani34423.workers.dev", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(todo)
@@ -189,3 +189,4 @@ function updateTasks(currentHour){
     tasksList.appendChild(li);
   });
 }
+
