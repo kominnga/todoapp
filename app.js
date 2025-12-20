@@ -19,13 +19,10 @@ const saveTodos = (todos) => localStorage.setItem(STORAGE_KEY, JSON.stringify(to
 
 /* ===== util ===== */
 function nowHHMM() { return new Date().toTimeString().slice(0,5); }
-function dayOfWeek(dateStr) {
-  const days = ["日","月","火","水","木","金","土"];
-  return days[new Date(dateStr).getDay()];
-}
+function dayOfWeek(dateStr) { const days = ["日","月","火","水","木","金","土"]; return days[new Date(dateStr).getDay()]; }
 
 /* ===== タスク追加 ===== */
-async function addTodo() {
+function addTodo() {
   const title = document.getElementById("title").value;
   const date = document.getElementById("date").value;
   const startTime = document.getElementById("startTime").value;
@@ -49,15 +46,11 @@ async function addTodo() {
   saveTodos(todos);
 
   // Worker に送信（LINE BOT通知）
-  try {
-    await fetch("https://empty-haze-29be.kanikani34423.workers.dev/tasks", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(todo)
-    });
-  } catch (e) {
-    console.error("通知送信エラー:", e);
-  }
+  fetch("https://empty-haze-29be.kanikani34423.workers.dev/", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(todo)
+  });
 
   document.getElementById("title").value="";
   render();
@@ -102,10 +95,7 @@ function render(){
     if(todo.status==="doing" && todo.startedAt && Date.now()-todo.startedAt>60*60*1000) div.classList.add("over");
 
     let duration="";
-    if(todo.startedAt && todo.endedAt){
-      const min = Math.floor((todo.endedAt - todo.startedAt)/60000);
-      duration = ` ⏱${min}分`;
-    }
+    if(todo.startedAt && todo.endedAt){ const min = Math.floor((todo.endedAt - todo.startedAt)/60000); duration = ` ⏱${min}分`; }
 
     div.innerHTML=`
       <div>
@@ -136,7 +126,7 @@ function drawFace() {
   ctx.fillStyle = '#fff';
   ctx.fill();
   ctx.strokeStyle = '#333';
-  ctx.lineWidth = 3;
+  ctx.lineWidth = 4;
   ctx.stroke();
 
   ctx.font = `${radius * 0.15}px Arial`;
@@ -144,8 +134,8 @@ function drawFace() {
   ctx.textAlign = "center";
   for(let num = 1; num <= 12; num++){
     const ang = num * Math.PI / 6;
-    const x = Math.sin(ang) * (radius - 20);
-    const y = -Math.cos(ang) * (radius - 20);
+    const x = Math.sin(ang) * (radius - 25);
+    const y = -Math.cos(ang) * (radius - 25);
     ctx.fillStyle = "#000";
     ctx.fillText(num, x, y);
   }
@@ -157,8 +147,8 @@ function drawHands() {
   const minute = now.getMinutes();
   const second = now.getSeconds();
 
-  drawHand((hour + minute/60) * Math.PI/6, radius*0.5, 5);
-  drawHand((minute + second/60) * Math.PI/30, radius*0.7, 3);
+  drawHand((hour + minute/60) * Math.PI/6, radius*0.5, 6);
+  drawHand((minute + second/60) * Math.PI/30, radius*0.7, 4);
   drawHand(second * Math.PI/30, radius*0.85, 2, "red");
 
   updateTasks(now.getHours());
@@ -179,13 +169,11 @@ function drawHand(pos, length, width, color="#000"){
 function updateTasks(currentHour){
   const tasksList = document.getElementById("tasksList");
   tasksList.innerHTML = "";
-
   const todos = getTodos();
   const filtered = todos.filter(t=>{
     const taskHour = parseInt(t.startTime?.split(":")[0]);
     return (!t.status || t.status!=="done") && taskHour === currentHour;
   });
-
   filtered.forEach(t=>{
     const li = document.createElement("li");
     li.textContent = t.title;
